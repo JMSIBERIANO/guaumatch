@@ -777,6 +777,10 @@ function abrirAuth(tab){
       if (reg){
         const { data, error } = await sb.auth.signUp({ email:f.email, password:f.password, options:{ data:{ nombre:f.nombre, ...evidenciaLegal() }, emailRedirectTo: location.origin + location.pathname } });
         if (error) throw error;
+        if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0){
+          $('#eAuth').textContent = 'Este correo ya tiene una cuenta. Toca Ingresar, o "¿Olvidaste tu contraseña?" si no la recuerdas.';
+          ocupado(btn, false); return;
+        }
         if (!data.session){
           modal(`<div class="vacio"><div class="ico">📬</div><h2>Revisa tu correo</h2><p>Te enviamos un enlace a <b>${esc(f.email)}</b> para confirmar tu cuenta. Ábrelo y volverás a GuauMatch con tu sesión iniciada.</p><button class="btn" onclick="cerrarModal()">Entendido</button></div>`);
           return;
